@@ -13,7 +13,8 @@ public record SoftwareResponse(UUID softwareId,
                                String softwareAuthor,
                                String softwareLink,
                                LicenseModel licenseModel,
-                               LocalDate requestDate) {
+                               LocalDate requestDate,
+                               Boolean availability) {
     public static SoftwareResponse parseToSoftwareResponse(SoftwareModel softwareModel) {
         return new SoftwareResponse(
                 softwareModel.getSoftwareId(),
@@ -23,7 +24,8 @@ public record SoftwareResponse(UUID softwareId,
                 softwareModel.getSoftwareAuthor(),
                 softwareModel.getSoftwareLink(),
                 softwareModel.getLicenseEnum(),
-                softwareModel.getRequestDate()
+                softwareModel.getRequestDate(),
+                softwareModel.getAvailability()
         );
     }
 }

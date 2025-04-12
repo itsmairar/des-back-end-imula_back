@@ -20,15 +20,17 @@ public class SoftwareController {
     @Autowired
     private SoftwareService softwareService;
 
-    //Endpoint para cadastrar novo usuário
+    //Endpoint para cadastrar novo software
+    //Perfil: Admin
     @PostMapping("/new")
-    public ResponseEntity<Void> registredSoftware(@RequestBody SoftwareRequest softwareRequest) {
+    public ResponseEntity<Void> registerSoftware(@RequestBody SoftwareRequest softwareRequest) {
         SoftwareResponse responseNewSoftware = softwareService.createSoftware(softwareRequest);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(responseNewSoftware.softwareId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     //Endpoint para listar todos os softwares cadastrados
+    //Perfil: Admin e Professor
     @GetMapping()
     public ResponseEntity<List<SoftwareResponse>> allSoftwares(){
         List<SoftwareResponse> softwareResponseList = softwareService.getAllSoftware();
@@ -36,10 +38,21 @@ public class SoftwareController {
     }
 
     //Endpoint para listar um software cadastrado baseado no ID
-    @GetMapping({"/softwareId"})
-    public ResponseEntity<SoftwareResponse> getSoftwareById(@PathVariable UUID softwareId){
+    //Perfil: Admin
+    @GetMapping("/{softwareId}")
+    public ResponseEntity<SoftwareResponse> findSoftwareById(@PathVariable UUID softwareId){
         SoftwareResponse softwareRegistred = softwareService.getSoftwareById(softwareId);
         return ResponseEntity.status(HttpStatus.OK).body(softwareRegistred);
     }
+
+    //Endpoint para editar um software cadastrado baseado no ID
+    //Perfil: Admin
+    @PutMapping("/{softwareId}")
+    public ResponseEntity<Void> updateSoftware(@RequestBody SoftwareRequest softwareRequest, @PathVariable UUID softwareId) {
+        softwareService.updateSoftware(softwareRequest, softwareId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
 
 }

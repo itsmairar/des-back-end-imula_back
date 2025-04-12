@@ -12,17 +12,20 @@ public record SoftwareRequest(
                              String softwareAuthor,
                              String softwareLink,
                              Integer licenseCode,
-                             LocalDate requestDate) {
+                             LocalDate requestDate,
+                             Boolean availability) {
 
     public SoftwareModel toSoftwareModel(SoftwareRequest softwareRequest, LicenseModel license) {
         return new SoftwareModel(
-                softwareRequest.softwareName,
-                softwareRequest.softwareDescription,
-                softwareRequest.softwareVersion,
-                softwareRequest.softwareAuthor,
-                softwareRequest.softwareLink,
+                softwareRequest.softwareName(),
+                softwareRequest.softwareDescription(),
+                softwareRequest.softwareVersion(),
+                softwareRequest.softwareAuthor(),
+                softwareRequest.softwareLink(),
                 license,
-                softwareRequest.requestDate);
+                softwareRequest.requestDate(),
+                softwareRequest.availability()
+        );
     }
 
 

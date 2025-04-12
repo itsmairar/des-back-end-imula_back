@@ -7,6 +7,7 @@ import com.instalab.models.SoftwareModel;
 import com.instalab.repositories.SoftwareRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,6 +24,7 @@ public class SoftwareService {
     private LicenseService licenseService;
 
 
+    @Transactional
     public SoftwareResponse createSoftware(SoftwareRequest softwareRequest) {
         LicenseModel license = licenseService.getLicense(softwareRequest.licenseCode());
         SoftwareModel newSoftware = softwareRequest.toSoftwareModel(softwareRequest, license);
@@ -43,12 +45,12 @@ public class SoftwareService {
         return SoftwareResponse.parseToSoftwareResponse(software);
     }
 
-    public SoftwareResponse updateSoftware(SoftwareRequest softwareRequest, UUID softwareId) {
+    @Transactional
+    public void updateSoftware(SoftwareRequest softwareRequest, UUID softwareId) {
         SoftwareModel softwareRegistred = softwareRepository.findBySoftwareId(softwareId);
         LicenseModel license = licenseService.getLicense(softwareRequest.licenseCode());
         buildChanges(softwareRegistred, softwareRequest, license);
         softwareRepository.save(softwareRegistred);
-        return SoftwareResponse.parseToSoftwareResponse(softwareRegistred);
     }
 
     private static SoftwareModel buildChanges(SoftwareModel softwareRegistred, SoftwareRequest softwareRequest, LicenseModel license) {
@@ -61,6 +63,7 @@ public class SoftwareService {
         softwareRegistred.setRequestDate(softwareRequest.requestDate());
         return softwareRegistred;
     }
+
 
 
 

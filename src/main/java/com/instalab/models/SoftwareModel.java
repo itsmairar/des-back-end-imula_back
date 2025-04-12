@@ -21,7 +21,7 @@ public class SoftwareModel {
     @JoinColumn(name = "license_id")
     private LicenseModel licenseModel; //licensa (gratuito - FREE / pago - PAID)
     private LocalDate requestDate; //data da requisicao
-    private Boolean availability; //disponibilidade de instalacao
+    private Boolean availability = true; //disponibilidade de instalacao
 
     public LicenseModel getLicenseModel() {
         return licenseModel;
@@ -50,6 +50,7 @@ public class SoftwareModel {
         this.softwareLink = softwareLink;
         this.licenseModel = licenseModel;
         this.requestDate = requestDate;
+
     }
 
     public SoftwareModel(
@@ -59,7 +60,9 @@ public class SoftwareModel {
                     String softwareAuthor,
                     String softwareLink,
                     LicenseModel licenseModel,
-                    LocalDate requestDate) {
+                    LocalDate requestDate,
+                    Boolean availability
+                    ) {
         this.softwareName = softwareName;
         this.softwareDescription = softwareDescription;
         this.softwareVersion = softwareVersion;
@@ -67,6 +70,8 @@ public class SoftwareModel {
         this.softwareLink = softwareLink;
         this.licenseModel = licenseModel;
         this.requestDate = requestDate;
+        this.availability = availability;
+
     }
 
     public UUID getSoftwareId() {
@@ -124,5 +129,13 @@ public class SoftwareModel {
 
     public void setRequestDate(LocalDate requestDate) {
         this.requestDate = requestDate;
+    }
+
+    public Boolean getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Boolean availability) {
+        this.availability = availability;
     }
 }
