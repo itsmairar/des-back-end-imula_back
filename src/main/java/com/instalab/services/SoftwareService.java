@@ -40,8 +40,8 @@ public class SoftwareService {
                 .collect(Collectors.toList());
     }
 
-    public SoftwareResponse getSoftwareById(UUID id) {
-        SoftwareModel software = softwareRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Software not found"));
+    public SoftwareResponse getSoftwareById(UUID softwareId) {
+        SoftwareModel software = softwareRepository.findById(softwareId).orElseThrow(() -> new NoSuchElementException("Software not found"));
         return SoftwareResponse.parseToSoftwareResponse(software);
     }
 
