@@ -1,4 +1,4 @@
-package com.instalab.models;
+package com.instalab.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -9,7 +9,6 @@ import jakarta.persistence.Table;
 public class LicenseModel {
 
     @Id
-
     private Integer licenseId;
     private String licenseName;
 

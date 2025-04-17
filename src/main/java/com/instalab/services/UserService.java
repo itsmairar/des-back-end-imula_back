@@ -1,9 +1,8 @@
 package com.instalab.services;
 
 import com.instalab.dtos.requests.UserRequest;
-import com.instalab.dtos.responses.SoftwareResponse;
 import com.instalab.dtos.responses.UserResponse;
-import com.instalab.models.UserModel;
+import com.instalab.entities.UserModel;
 import com.instalab.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

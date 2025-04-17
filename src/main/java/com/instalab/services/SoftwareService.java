@@ -2,16 +2,15 @@ package com.instalab.services;
 
 import com.instalab.dtos.requests.SoftwareRequest;
 import com.instalab.dtos.responses.SoftwareResponse;
-import com.instalab.models.LicenseModel;
-import com.instalab.models.SoftwareModel;
+import com.instalab.entities.LaboratoryModel;
+import com.instalab.entities.LicenseModel;
+import com.instalab.entities.SoftwareModel;
 import com.instalab.repositories.SoftwareRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,11 +22,16 @@ public class SoftwareService {
     @Autowired
     private LicenseService licenseService;
 
+    @Autowired
+    private LaboratoryService laboratoryService;
+
 
     @Transactional
     public SoftwareResponse createSoftware(SoftwareRequest softwareRequest) {
         LicenseModel license = licenseService.getLicense(softwareRequest.licenseCode());
+        Set<LaboratoryModel> laboratoryList = new LinkedHashSet<>(laboratoryService.getAllLaboratoryModels());
         SoftwareModel newSoftware = softwareRequest.toSoftwareModel(softwareRequest, license);
+        newSoftware.setLaboratoriesList(laboratoryList);
         softwareRepository.save(newSoftware);
         return SoftwareResponse.parseToSoftwareResponse(newSoftware);
     }

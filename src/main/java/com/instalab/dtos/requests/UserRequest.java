@@ -1,8 +1,6 @@
 package com.instalab.dtos.requests;
 
-import com.instalab.models.UserModel;
-
-import java.util.UUID;
+import com.instalab.entities.UserModel;
 
 public record UserRequest(
         String fullname,

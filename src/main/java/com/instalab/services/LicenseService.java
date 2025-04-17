@@ -1,7 +1,7 @@
 package com.instalab.services;
 
 
-import com.instalab.models.LicenseModel;
+import com.instalab.entities.LicenseModel;
 import com.instalab.repositories.LicenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

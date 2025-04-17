@@ -1,10 +1,14 @@
 package com.instalab.dtos.responses;
 
-import com.instalab.models.LicenseModel;
-import com.instalab.models.SoftwareModel;
+
+import com.instalab.dtos.responses.util.LaboratorySimpleResponse;
+import com.instalab.entities.LicenseModel;
+import com.instalab.entities.SoftwareModel;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public record SoftwareResponse(UUID softwareId,
                                String softwareName,
@@ -14,7 +18,10 @@ public record SoftwareResponse(UUID softwareId,
                                String softwareLink,
                                LicenseModel licenseModel,
                                LocalDate requestDate,
-                               Boolean availability) {
+                               Boolean availability,
+                               Boolean softwareInstalled,
+                               Set<LaboratorySimpleResponse> laboratoriesForInstallation) {
+
     public static SoftwareResponse parseToSoftwareResponse(SoftwareModel softwareModel) {
         return new SoftwareResponse(
                 softwareModel.getSoftwareId(),
@@ -23,9 +30,17 @@ public record SoftwareResponse(UUID softwareId,
                 softwareModel.getSoftwareVersion(),
                 softwareModel.getSoftwareAuthor(),
                 softwareModel.getSoftwareLink(),
-                softwareModel.getLicenseEnum(),
+                softwareModel.getLicenseModel(),
                 softwareModel.getRequestDate(),
-                softwareModel.getAvailability()
+                softwareModel.isAvailable(),
+                softwareModel.isInstalled(),
+                softwareModel.getLaboratoriesList()
+                        .stream()
+                        .map(lab -> new LaboratorySimpleResponse(
+                                lab.getLaboratoryId(),
+                                lab.getLaboratoryName(),
+                                lab.getLaboratoryAvailability()))
+                        .collect(Collectors.toSet())
         );
     }
 }

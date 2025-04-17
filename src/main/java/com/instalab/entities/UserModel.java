@@ -1,4 +1,4 @@
-package com.instalab.models;
+package com.instalab.entities;
 
 import jakarta.persistence.*;
 

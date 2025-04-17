@@ -1,6 +1,6 @@
 package com.instalab.repositories;
 
-import com.instalab.models.UserModel;
+import com.instalab.entities.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
