@@ -7,6 +7,7 @@ import com.instalab.entities.LicenseModel;
 import com.instalab.entities.SoftwareModel;
 import com.instalab.repositories.SoftwareRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class SoftwareService {
     @Autowired
     private LicenseService licenseService;
 
+    @Lazy
     @Autowired
     private LaboratoryService laboratoryService;
 
@@ -29,9 +31,8 @@ public class SoftwareService {
     @Transactional
     public SoftwareResponse createSoftware(SoftwareRequest softwareRequest) {
         LicenseModel license = licenseService.getLicense(softwareRequest.licenseCode());
-        Set<LaboratoryModel> laboratoryList = new LinkedHashSet<>(laboratoryService.getAllLaboratoryModels());
         SoftwareModel newSoftware = softwareRequest.toSoftwareModel(softwareRequest, license);
-        newSoftware.setLaboratoriesList(laboratoryList);
+        newSoftware.setSoftwareInstalled(false);
         softwareRepository.save(newSoftware);
         return SoftwareResponse.parseToSoftwareResponse(newSoftware);
     }
@@ -45,8 +46,14 @@ public class SoftwareService {
     }
 
     public SoftwareResponse getSoftwareById(UUID softwareId) {
-        SoftwareModel software = softwareRepository.findById(softwareId).orElseThrow(() -> new NoSuchElementException("Software not found"));
-        return SoftwareResponse.parseToSoftwareResponse(software);
+        SoftwareModel software = softwareRepository.findById(softwareId)
+                .orElseThrow(() -> new NoSuchElementException("Software not found"));
+        Set<LaboratoryModel> laboratoriesAssociates = laboratoryService.getLaboratoriesBySoftwareId(softwareId);
+        return SoftwareResponse.parseToSoftwareResponse(software, laboratoriesAssociates);
+    }
+
+    public SoftwareModel findSoftwareBySoftwarId(UUID softwareId) {
+        return softwareRepository.findBySoftwareId(softwareId);
     }
 
     @Transactional
@@ -65,9 +72,20 @@ public class SoftwareService {
         softwareRegistred.setSoftwareLink(softwareRequest.softwareLink());
         softwareRegistred.setLicenseModel(license);
         softwareRegistred.setRequestDate(softwareRequest.requestDate());
+        softwareRegistred.setSoftwareAvailability(softwareRequest.availability());
         return softwareRegistred;
     }
 
+    //Metodo que retorna uma lista (Set) de todos os softwares instalados em um determinado laboratorio
+    public Set<SoftwareModel> getSoftwaresByLaboratoryId(Long laboratoryId) {
+        return softwareRepository.findByLaboratoriesList_LaboratoryId(laboratoryId);
+    }
+
+    public void disableSoftware(UUID softwareId) {
+        SoftwareModel softwareRegistred = softwareRepository.findBySoftwareId(softwareId);
+        softwareRegistred.setSoftwareAvailability(Boolean.FALSE);
+        softwareRepository.save(softwareRegistred);
+    }
 
 
 

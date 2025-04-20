@@ -18,16 +18,16 @@ public class LaboratoryModel {
 
     @ManyToMany(mappedBy = "laboratoriesList")
     @JsonIgnore
-    private Set<SoftwareModel> listSoftwares;
+    private Set<SoftwareModel> softwaresInstalled;
 
     public LaboratoryModel() {
-        listSoftwares = new LinkedHashSet<>();
+        softwaresInstalled = new LinkedHashSet<>();
     }
 
-    public LaboratoryModel(String laboratoryName, Boolean laboratoryAvailability, Set<SoftwareModel> listSoftwares) {
+    public LaboratoryModel(String laboratoryName, Boolean laboratoryAvailability, Set<SoftwareModel> softwaresInstalled) {
         this.laboratoryName = laboratoryName;
         this.laboratoryAvailability = laboratoryAvailability;
-        this.listSoftwares = listSoftwares;
+        this.softwaresInstalled = softwaresInstalled;
     }
 
     public Long getLaboratoryId() {
@@ -50,11 +50,11 @@ public class LaboratoryModel {
         this.laboratoryAvailability = laboratoryAvailability;
     }
 
-    public Set<SoftwareModel> getListSoftwares() {
-        return listSoftwares;
+    public Set<SoftwareModel> getSoftwaresInstalled() {
+        return softwaresInstalled;
     }
 
-    public void setListSoftwares(Set<SoftwareModel> listSoftware) {
-        this.listSoftwares = listSoftware;
+    public void setSoftwaresInstalled(Set<SoftwareModel> listSoftware) {
+        this.softwaresInstalled = listSoftware;
     }
 }

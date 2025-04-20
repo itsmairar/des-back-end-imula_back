@@ -39,7 +39,6 @@ public class Dev {
             licenseRepository.save(l2);
 
             LaboratoryModel lab1 = new LaboratoryModel("Laboratorio 1", true, new LinkedHashSet<>() );
-//            laboratoryRepository.save(lab1);
 //
             SoftwareModel soft1 = new SoftwareModel(
                     "ChatGPT Helper",
@@ -49,9 +48,7 @@ public class Dev {
                     "https://openai.com/chatgpt",
                     l1,
                     LocalDate.now(),
-                    true,
-                    true,
-                    new LinkedHashSet<>());
+                    true);
             soft1.getLaboratoriesList().add(lab1);
             softwareRepository.save(soft1);
         };

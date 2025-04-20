@@ -65,9 +65,7 @@ public class SoftwareModel {
             String softwareLink,
             LicenseModel licenseModel,
             LocalDate requestDate,
-            Boolean softwareAvailability,
-            Boolean softwareInstalled,
-            Set<LaboratoryModel> laboratoriesList
+            Boolean softwareAvailability
     ) {
         this.softwareName = softwareName;
         this.softwareDescription = softwareDescription;
@@ -77,8 +75,8 @@ public class SoftwareModel {
         this.licenseModel = licenseModel;
         this.requestDate = requestDate;
         this.softwareAvailability = softwareAvailability;
-        this.softwareInstalled = softwareInstalled;
-        this.laboratoriesList = laboratoriesList;
+        laboratoriesList = new LinkedHashSet<>();
+
 
     }
     public UUID getSoftwareId() {

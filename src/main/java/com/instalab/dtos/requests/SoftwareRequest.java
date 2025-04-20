@@ -16,9 +16,8 @@ public record SoftwareRequest(
                              String softwareLink,
                              Integer licenseCode,
                              LocalDate requestDate,
-                             Boolean availability,
-                             Boolean softwareInstalled,
-                             Set<LaboratoryModel> laboratoriesList) {
+                             Boolean availability
+) {
 
     public SoftwareModel toSoftwareModel(SoftwareRequest softwareRequest, LicenseModel license) {
         return new SoftwareModel(
@@ -29,9 +28,7 @@ public record SoftwareRequest(
                 softwareRequest.softwareLink(),
                 license,
                 softwareRequest.requestDate(),
-                softwareRequest.availability(),
-                softwareRequest.softwareInstalled(),
-                new LinkedHashSet<>()
+                softwareRequest.availability()
         );
     }
 

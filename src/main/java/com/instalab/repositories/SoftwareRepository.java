@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface SoftwareRepository extends JpaRepository<SoftwareModel, UUID> {
 
-    public SoftwareModel findBySoftwareId(UUID softwareId);
+    SoftwareModel findBySoftwareId(UUID softwareId);
 
-    Set<SoftwareModel> findByLaboratoriesList_LaboratoryId(UUID laboratoryId);// falta implementar logica no service
+    Set<SoftwareModel> findByLaboratoriesList_LaboratoryId(Long laboratoryId);
 }
