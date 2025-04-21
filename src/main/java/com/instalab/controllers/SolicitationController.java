@@ -33,7 +33,18 @@ public class SolicitationController {
         return ResponseEntity.created(uri).build();
     }
 
+    @PutMapping("/execute/{solicitationId}")
+    public ResponseEntity<Void> executeSolicitation(@PathVariable Long solicitationId) {
+        solicitationService.executeSolicitation(solicitationId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
+    @PutMapping("/edit/{solicitationId}")
+    public ResponseEntity<Void> editSolicitation(@PathVariable Long solicitationId,
+                                                   @RequestBody Long laboratoryId) {
+        solicitationService.editSolicitation(solicitationId, laboratoryId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 
 

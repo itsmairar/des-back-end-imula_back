@@ -3,6 +3,7 @@ package com.instalab.controllers;
 import com.instalab.dtos.requests.LaboratoryRequest;
 import com.instalab.dtos.responses.LaboratoryResponse;
 import com.instalab.services.LaboratoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,8 @@ public class LaboratoryController {
     @PutMapping("/{laboratoryId}")
     public ResponseEntity<Void> updateLaboratory(
             @PathVariable Long laboratoryId,
-            @RequestBody LaboratoryRequest laboratoryRequest) {
+            @RequestBody @Valid
+            LaboratoryRequest laboratoryRequest) {
         laboratoryService.updateLaboratory(laboratoryId, laboratoryRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

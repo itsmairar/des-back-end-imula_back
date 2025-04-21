@@ -7,7 +7,6 @@ import com.instalab.entities.SoftwareModel;
 import com.instalab.entities.SolicitationModel;
 
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

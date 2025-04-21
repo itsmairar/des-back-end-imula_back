@@ -73,8 +73,9 @@ public class LaboratoryService {
     }
 
     private static LaboratoryModel processUpdate(LaboratoryRequest laboratoryRequest, LaboratoryModel laboratoryRegistred){
-        laboratoryRegistred.setLaboratoryName(laboratoryRequest.laboratoryName());
-        laboratoryRegistred.setLaboratoryAvailability(laboratoryRequest.laboratoryAvailability());
+            laboratoryRegistred.setLaboratoryName(laboratoryRequest.laboratoryName());
+            laboratoryRegistred.setLaboratoryAvailability(laboratoryRequest.laboratoryAvailability());
+
         return laboratoryRegistred;
     }
 
