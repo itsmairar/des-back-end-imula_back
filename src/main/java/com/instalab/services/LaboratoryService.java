@@ -38,6 +38,10 @@ public class LaboratoryService {
         return LaboratoryResponse.parseToLaboratoryResponse(laboratoryRegistred, softwaresAssociates);
     }
 
+    public LaboratoryModel findLaboratoryById(Long laboratoryId) {
+        return laboratoryRepository.findById(laboratoryId).get();
+    }
+
     //Metodo que retorna uma lista (Set) de todos os laboratorios que possuem um determinado software instalado
     public Set<LaboratoryModel> getLaboratoriesBySoftwareId(UUID softwareId) {
         return laboratoryRepository.findBySoftwaresInstalled_SoftwareId(softwareId);
@@ -82,8 +86,8 @@ public class LaboratoryService {
 
         laboratoryRegistred.getSoftwaresInstalled().remove(software);
         software.getLaboratoriesList().remove(laboratoryRegistred);
-
     }
+
 
 
 

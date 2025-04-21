@@ -45,6 +45,10 @@ public class SoftwareService {
                 .collect(Collectors.toList());
     }
 
+    public List<SoftwareModel> findAllSoftwaresByListIds(Set<UUID> softwareIds) {
+        return softwareRepository.findAllById(softwareIds);
+    }
+
     public SoftwareResponse getSoftwareById(UUID softwareId) {
         SoftwareModel software = softwareRepository.findById(softwareId)
                 .orElseThrow(() -> new NoSuchElementException("Software not found"));
