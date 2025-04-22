@@ -3,7 +3,11 @@
 
   
 
+  
+
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/sPaRahhH)
+
+  
 
   
 
@@ -11,7 +15,11 @@
 
   
 
+  
+
 ----------
+
+  
 
   
 
@@ -23,7 +31,11 @@
 
   
 
+  
+
 ## Turma 01 - Noturno - Análise e Desenvolvimento de Sistemas
+
+  
 
   
 
@@ -33,205 +45,224 @@ Deve ser utilizado obrigatoriamente a linguagem JAVA com Spring.
 
   
 
+  
+
 Necessário a identificação da tecnologia utilizada na entrega do formulário com o link desse projeto
 
   
 
   
 
-----------
-
-
-## Pré-requisitos
-
--   Java 17
-    
--   Maven (ou use o wrapper `./mvnw` incluído)
-    
--   (Opcional) [Postman](https://www.postman.com/) ou `curl` para testar as APIs
-    
+  
 
 ----------
 
-## Configuração
+  
+  
 
-1.  Clone este repositório:
-    
-    ```bash
-    git clone <repo-url>
-    cd des-back-end-imula_back
-    
-    ```
-    
-2.  Crie um arquivo `.env` na raiz do projeto:
-    
-    ```properties
-    # Chave secreta para assinatura do JWT (em Base64)
-    JWT_SECRET=sua chave secreta
-    
-    # Tempo de expiração do token em milissegundos (ex: 3600000 = 1h)
-    JWT_EXPIRATION=3600000
-    
-    ```
-    
-    > **IMPORTANTE:** adicione `.env` ao `.gitignore` para não comitar segredos.
-    
-3.  Gere sua própria chave secreta com OpenSSL:
-    
-    ```bash
-    openssl rand -base64 64
-    
-    ```
-    
-    Copie a saída para `JWT_SECRET`.
-    
-4.  No `application.properties`, as propriedades devem apontar para as variáveis:
-    
-    ```properties
-    token.jwt.secret=${JWT_SECRET}
-    token.jwt.expiration=${JWT_EXPIRATION:3600000}
-    spring.profiles.active=dev
-    
-    ```
-    
 
-----------
 
-## Executando a aplicação
 
-Use o wrapper Maven:
 
+
+## 🛠️ Pré-requisitos
+
+- **Java 17**
+- **Maven** (ou use o wrapper `./mvnw` incluído)
+- (Opcional) [Postman](https://www.postman.com/) ou `curl` para testes
+
+---
+
+##  Configuração Local
+
+1. **Clone** o repositório e acesse a pasta:
+   ```bash
+   git clone <repo-url>
+   cd des-back-end-imula_back
+   ```
+
+2. Crie um arquivo `.env` na raiz com estas variáveis (adapte `JWT_EXPIRATION` se quiser outro prazo):
+   ```ini
+   JWT_SECRET=<sua_chave_base64_com_~512_bits>
+   JWT_EXPIRATION=3600000   # em milissegundos (1h)
+   ```
+   > Gere uma chave com:
+> ```bash
+> openssl rand -base64 64
+> ```
+
+3. No `src/main/resources/application-dev.properties`, verifique:
+   ```properties
+   token.jwt.secret=${JWT_SECRET}
+   token.jwt.expiration=${JWT_EXPIRATION:3600000}
+   spring.profiles.active=dev
+   ```
+
+---
+
+##  Build e Execução
+
+Use o wrapper:
 ```bash
-chmod +x mvnw            # caso ainda não tenha permissão
+chmod +x mvnw       # se necessário
 ./mvnw clean spring-boot:run
-
 ```
-
-Ou, se preferir, com Maven instalado:
-
+Ou, com Maven instalado:
 ```bash
 mvn clean spring-boot:run
-
 ```
+A aplicação estará em `http://localhost:8080/`.
 
-A API ficará disponível em `http://localhost:8080/`.
+Para acessar o console H2 (banco em memória):
+```
+http://localhost:8080/h2-console
+JDBC URL: jdbc:h2:mem:instalab
+``` 
 
-----------
+---
 
-## Endpoints principais
+## Fluxo de Autenticação (JWT)
 
-### 1. Cadastro de usuário (público)
+1. **Registro**: `POST /user/new` (sem autenticação)  
+2. **Login**:    `POST /auth/login` (sem autenticação) → retorna `{ "token": "<JWT>" }`  
+3. **Requisições Protegidas**: incluir header `Authorization: Bearer <JWT>`
 
+---
+
+## Endpoints
+
+### 1. Cadastro de Usuário (público)
 ```
 POST /user/new
-
-```
-
-**Headers:** `Content-Type: application/json`
-
+```  
+**Headers:** `Content-Type: application/json`  
 **Body:**
-
 ```json
 {
   "fullname": "Nome Completo",
   "email": "usuario@exemplo.com",
   "password": "suaSenha",
-  "enterprise": "NomeEmpresa"
+  "enterprise": "EmpresaX"
 }
-
 ```
-
-**Resposta:** `201 Created`
-
-----------
+**Resposta:** `201 Created` com JSON do usuário.
 
 ### 2. Login (público)
-
 ```
 POST /auth/login
-
-```
-
-**Headers:** `Content-Type: application/json`
-
+```  
+**Headers:** `Content-Type: application/json`  
 **Body:**
-
 ```json
 {
   "username": "usuario@exemplo.com",
   "password": "suaSenha"
 }
-
 ```
-
 **Resposta:** `200 OK`
-
 ```json
 { "token": "<JWT_TOKEN>" }
-
 ```
 
-> Use este token para acessar as rotas protegidas.
-
-----------
-
-### 3. Rotas protegidas (exemplo: listar usuários)
-
+### 3. Listar Usuários (protegido)
 ```
 GET /user
-
-```
-
+```  
 **Headers:**
-
 ```
 Authorization: Bearer <JWT_TOKEN>
-
 ```
-
-**Resposta:** `200 OK` com JSON:
-
+**Resposta:** `200 OK`  
 ```json
 [
-  {
-    "userId": "...",
-    "fullname": "...",
-    "enterprise": "..."
-  }
+  { "userId": "...", "fullname": "...", "enterprise": "..." },
+  …
 ]
-
 ```
 
-> Retorna `401 Unauthorized` se o token faltar ou for inválido.
+### 4. Notificações
 
-----------
+#### a) Enviar notificação (protegido)
+```
+POST /notifications/{professorId}?message=<texto>
+```  
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`  
+**Exemplo URL:**
+```
+http://localhost:8080/notifications/c0297b74-5dfd-46be-ade2-471ff1247b7d?message=Solicita%C3%A7%C3%A3o%20conclu%C3%ADda
+```
+**Resposta:** `200 OK` com JSON:
+```json
+{
+  "id":"<notifUUID>",
+  "message":"Solicitação concluída",
+  "sentAt":"2025-04-22T...",
+  "read":false
+}
+```
 
-## Fluxo de autenticação
+#### b) Listar notificações (protegido)
+```
+GET /notifications?professorId={professorId}
+```  
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`  
+**Resposta:** `200 OK`
+```json
+[
+  { "id":"...", "message":"...","sentAt":"...","read":false },
+  …
+]
+```
 
-1.  **Crie** um usuário via `POST /user/new`.
-    
-2.  **Realize** login em `POST /auth/login` e obtenha o token.
-    
-3.  **Inclua** o header `Authorization: Bearer <token>` em chamadas a rotas protegidas.
-    
+#### c) Marcar notificação como lida (protegido)
+```
+PATCH /notifications/{notificationId}/read
+```  
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`  
+**Resposta:** `204 No Content`
 
-----------
+---
 
-## Testando com `curl`
+## Tratamento Global de Erros
+
+Respostas padronizadas via `GlobalExceptionHandler`:
+
+| Status | Causa                                | Exemplo de resposta                                               |
+|:------:|:-------------------------------------|:------------------------------------------------------------------|
+| 400    | Validação de DTO ou parâmetros errados | `{status:400, errors:[{field,..}], timestamp:...}`              |
+| 401    | Credenciais inválidas                | `{status:401, error:"Usuário ou senha inválidos", timestamp:...}`|
+| 404    | Recurso não encontrado               | `{status:404, error:"... not found", timestamp:...}`            |
+| 500    | Falha interna                        | `{status:500, error:"Erro interno: ...", timestamp:...}`        |
+
+---
+
+## Testes com curl
 
 ```bash
-# Criar usuário
-curl -X POST http://localhost:8080/user/new \
+# 1) Criar usuário
+curl -i -X POST http://localhost:8080/user/new \
   -H "Content-Type: application/json" \
   -d '{"fullname":"Teste","email":"teste@ex.com","password":"123","enterprise":"Lab"}'
 
-# Login e pegar o token
+# 2) Login
 curl -i -X POST http://localhost:8080/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"teste@ex.com","password":"123"}'
 
-# Chamada protegida
-curl http://localhost:8080/user \
+# 3) Chamada protegida
+curl -i http://localhost:8080/user \
   -H "Authorization: Bearer <JWT_TOKEN>"
 
+# 4) Enviar notificação
+curl -i -X POST "http://localhost:8080/notifications/{professorId}?message=Ok" \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+
+# 5) Listar notificações
+curl -i http://localhost:8080/notifications?professorId={professorId} \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+
+# 6) Marcar como lida
+curl -i -X PATCH http://localhost:8080/notifications/{notificationId}/read \
+  -H "Authorization: Bearer <JWT_TOKEN>"
 ```
+
