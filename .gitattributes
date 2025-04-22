@@ -1,2 +1,61 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# Maven build output
+/target/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+/pom.xml.next
+/release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Wrapper files (se usando mvnw)
+/.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot properties override
+/*.properties
+
+# Environment variables
+.env
+
+# IDE: IntelliJ
+*.iml
+.idea/
+/out/
+
+# IDE: Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+
+# IDE: VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Test reports / coverage
+/site
+/coverage/
+/jacoco.exec
+
+# Database files (H2 console)
+/*.mv.db
+/*.h2.db
+
+# Others
+*.swp
