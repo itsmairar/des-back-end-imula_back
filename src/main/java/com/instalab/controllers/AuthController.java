@@ -26,7 +26,7 @@ public class AuthController {
   @PostMapping("/login")
   public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest req) {
     Authentication auth = authManager.authenticate(
-      new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword())
+      new UsernamePasswordAuthenticationToken(req.username(), req.password())
     );
     String token = tokenProvider.generateToken(auth);
     return ResponseEntity.ok(new AuthResponse(token));

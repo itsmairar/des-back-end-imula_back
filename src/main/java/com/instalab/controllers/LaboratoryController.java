@@ -16,6 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/laboratory")
+//PERFIL: ADMIN
 public class LaboratoryController {
 
     @Autowired

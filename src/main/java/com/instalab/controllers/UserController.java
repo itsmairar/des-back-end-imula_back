@@ -15,6 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
+//PERFIL: ADMIN
 public class UserController {
 
     @Autowired

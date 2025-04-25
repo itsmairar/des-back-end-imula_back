@@ -4,6 +4,7 @@ import com.instalab.dtos.requests.SoftwareRequest;
 import com.instalab.dtos.responses.SoftwareResponse;
 import com.instalab.services.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class SoftwareController {
 
     //Endpoint para cadastrar novo software
     //Perfil: Admin
+    @Profile("ROLE_ADMIN")
     @PostMapping("/new")
     public ResponseEntity<Void> registerSoftware(@RequestBody SoftwareRequest softwareRequest) {
         SoftwareResponse responseNewSoftware = softwareService.createSoftware(softwareRequest);
