@@ -6,6 +6,7 @@ import com.instalab.services.SolicitationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,6 +21,7 @@ public class SolicitationController {
     private SolicitationService solicitationService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<SolicitationResponse>> getAllSolicitations() {
         List<SolicitationResponse> solicitations = solicitationService.getAllSolicitations();
         return ResponseEntity.status(HttpStatus.OK).body(solicitations);
@@ -34,12 +36,14 @@ public class SolicitationController {
     }
 
     @PutMapping("/execute/{solicitationId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> executeSolicitation(@PathVariable Long solicitationId) {
         solicitationService.executeSolicitation(solicitationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/edit/{solicitationId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> editSolicitation(@PathVariable Long solicitationId,
                                                    @RequestBody Long laboratoryId) {
         solicitationService.editSolicitation(solicitationId, laboratoryId);
