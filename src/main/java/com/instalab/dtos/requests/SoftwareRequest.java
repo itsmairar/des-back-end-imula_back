@@ -1,9 +1,12 @@
 package com.instalab.dtos.requests;
 
-import com.instalab.models.LicenseModel;
-import com.instalab.models.SoftwareModel;
+import com.instalab.entities.LaboratoryModel;
+import com.instalab.entities.LicenseModel;
+import com.instalab.entities.SoftwareModel;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public record SoftwareRequest(
                              String softwareName,
@@ -12,8 +15,8 @@ public record SoftwareRequest(
                              String softwareAuthor,
                              String softwareLink,
                              Integer licenseCode,
-                             LocalDate requestDate,
-                             Boolean availability) {
+                             Boolean availability
+) {
 
     public SoftwareModel toSoftwareModel(SoftwareRequest softwareRequest, LicenseModel license) {
         return new SoftwareModel(
@@ -23,7 +26,6 @@ public record SoftwareRequest(
                 softwareRequest.softwareAuthor(),
                 softwareRequest.softwareLink(),
                 license,
-                softwareRequest.requestDate(),
                 softwareRequest.availability()
         );
     }

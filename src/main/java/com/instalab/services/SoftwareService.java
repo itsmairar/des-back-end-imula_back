@@ -2,16 +2,17 @@ package com.instalab.services;
 
 import com.instalab.dtos.requests.SoftwareRequest;
 import com.instalab.dtos.responses.SoftwareResponse;
-import com.instalab.models.LicenseModel;
-import com.instalab.models.SoftwareModel;
+import com.instalab.entities.LaboratoryModel;
+import com.instalab.entities.LicenseModel;
+import com.instalab.entities.SoftwareModel;
 import com.instalab.repositories.SoftwareRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,11 +24,16 @@ public class SoftwareService {
     @Autowired
     private LicenseService licenseService;
 
+    @Lazy
+    @Autowired
+    private LaboratoryService laboratoryService;
+
 
     @Transactional
     public SoftwareResponse createSoftware(SoftwareRequest softwareRequest) {
         LicenseModel license = licenseService.getLicense(softwareRequest.licenseCode());
         SoftwareModel newSoftware = softwareRequest.toSoftwareModel(softwareRequest, license);
+        newSoftware.setSoftwareInstalled(false);
         softwareRepository.save(newSoftware);
         return SoftwareResponse.parseToSoftwareResponse(newSoftware);
     }
@@ -40,9 +46,19 @@ public class SoftwareService {
                 .collect(Collectors.toList());
     }
 
-    public SoftwareResponse getSoftwareById(UUID id) {
-        SoftwareModel software = softwareRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Software not found"));
-        return SoftwareResponse.parseToSoftwareResponse(software);
+    public List<SoftwareModel> findAllSoftwaresByListIds(Set<UUID> softwareIds) {
+        return softwareRepository.findAllById(softwareIds);
+    }
+
+    public SoftwareResponse getSoftwareById(UUID softwareId) {
+        SoftwareModel software = softwareRepository.findById(softwareId)
+                .orElseThrow(() -> new NoSuchElementException("Software not found"));
+        Set<LaboratoryModel> laboratoriesAssociates = laboratoryService.getLaboratoriesBySoftwareId(softwareId);
+        return SoftwareResponse.parseToSoftwareResponse(software, laboratoriesAssociates);
+    }
+
+    public SoftwareModel findSoftwareBySoftwarId(UUID softwareId) {
+        return softwareRepository.findBySoftwareId(softwareId);
     }
 
     @Transactional
@@ -60,10 +76,21 @@ public class SoftwareService {
         softwareRegistred.setSoftwareAuthor(softwareRegistred.getSoftwareAuthor());
         softwareRegistred.setSoftwareLink(softwareRequest.softwareLink());
         softwareRegistred.setLicenseModel(license);
-        softwareRegistred.setRequestDate(softwareRequest.requestDate());
+        softwareRegistred.setRegistrationDate(LocalDate.now());
+        softwareRegistred.setSoftwareAvailability(softwareRequest.availability());
         return softwareRegistred;
     }
 
+    //Metodo que retorna uma lista (Set) de todos os softwares instalados em um determinado laboratorio
+    public Set<SoftwareModel> getSoftwaresByLaboratoryId(Long laboratoryId) {
+        return softwareRepository.findByLaboratoriesList_LaboratoryId(laboratoryId);
+    }
+
+    public void disableSoftware(UUID softwareId) {
+        SoftwareModel softwareRegistred = softwareRepository.findBySoftwareId(softwareId);
+        softwareRegistred.setSoftwareAvailability(Boolean.FALSE);
+        softwareRepository.save(softwareRegistred);
+    }
 
 
 

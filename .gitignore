@@ -1,51 +1,17 @@
-<<<<<<< HEAD
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
+# Build output
+/target/
+/build/
 /dist/
+/nbbuild/
 /nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
-.vscode/
-=======
-# Compiled class file
+# Maven wrapper
+/.mvn/wrapper/maven-wrapper.jar
+
+# Java binaries
 *.class
 
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Package files
 *.jar
 *.war
 *.nar
@@ -54,11 +20,56 @@ build/
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Logs
+*.log
+/logs/
+
+# IDE: IntelliJ IDEA
+/.idea/
+*.iml
+*.ipr
+*.iws
+/out/
+
+# IDE: Eclipse / STS
+.classpath
+.project
+.settings/
+.springBeans
+.apt_generated
+.factorypath
+.sts4-cache
+
+# IDE: NetBeans
+/nbproject/private/
+/nbproject/README.txt
+
+# IDE: VS Code
+/.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temp files
+*~
+*.tmp
+*.temp
+
+# Crash logs
 hs_err_pid*
 replay_pid*
-<<<<<<< HEAD
->>>>>>> c89a00cc53cc086e0dd1df2a691df0e3cdf7d474
-=======
->>>>>>> 5da5f11 (Initial commit)
->>>>>>> ebaf70f (feat(endpoint): Criação do endpoint de cadastro de usuário)
+
+# Dotenv
+.env
+
+# Test reports / coverage
+/site/
+/coverage/
+/jacoco.exec
+
+# Exclude build directories under module source trees
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/

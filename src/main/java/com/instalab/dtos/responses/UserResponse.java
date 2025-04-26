@@ -1,6 +1,6 @@
 package com.instalab.dtos.responses;
 
-import com.instalab.models.UserModel;
+import com.instalab.entities.UserModel;
 
 import java.util.UUID;
 
