@@ -1,19 +1,21 @@
 package com.instalab.dtos.requests;
 
 import com.instalab.entities.UserModel;
+import java.util.Set;
 
 public record UserRequest(
-        String fullname,
-        String email,
-        String password,
-        String enterprise) {
-
-    public UserModel toUserModel(UserRequest userRequest) {
+    String fullname,
+    String email,
+    String password,
+    String enterprise,
+    Set<String> roles
+) {
+    public UserModel toUserModel() {
         return new UserModel(
-                userRequest.fullname,
-                userRequest.email,
-                userRequest.password,
-                userRequest.enterprise
+            this.fullname,
+            this.email,
+            this.password,
+            this.enterprise
         );
     }
 }
