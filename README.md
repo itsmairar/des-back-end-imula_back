@@ -1,268 +1,208 @@
 
-  
+# InstaLab Back-End
 
-  
-
-  
-
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/sPaRahhH)
-
-  
-
-  
-
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/sPaRahhH)  
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=18622885&assignment_repo_type=AssignmentRepo)
 
-  
+---
 
-  
+## Desenvolvimento Back End  
+**Turma 01 – Noturno – Análise e Desenvolvimento de Sistemas**  
+Linguagem: **Java 17** com **Spring Boot**.
+
+---
+
+# InstaLab Back-End
+
+**Versão:** 0.0.1-SNAPSHOT  
+**Tecnologias:** Java 17 · Spring Boot 3 · Spring Security · JWT (HS512) · Spring Data JPA/Hibernate · PostgreSQL · Docker · Docker Compose
+
+---
+
+## 🛠 Pré-requisitos
+
+- Java 17+ (JDK)  
+- Maven (embutido: `./mvnw`)  
+- Docker & Docker Compose  
+- (Opcional) Cliente `psql` ou H2-Console para inspeção do banco
+
+---
+
+## Como rodar via Docker
+
+1. Crie um arquivo `.env` na raiz (copiando de `.env.example`) com:
+
+    ```dotenv
+    # JWT
+    JWT_SECRET=⟨chave-Base64-512bits⟩
+    JWT_EXPIRATION=3600000
+
+    # PostgreSQL
+    POSTGRES_USER=instalab
+    POSTGRES_PASSWORD=instalab123
+    POSTGRES_DB=instalab
+    DB_HOST=localhost
+    DB_PORT=5432
+    ```
+
+2. Suba o banco PostgreSQL em container:
+
+    ```bash
+    docker-compose up -d
+    ```
+
+3. Limpe & inicie o back-end:
+
+    ```bash
+    ./mvnw clean spring-boot:run -Dspring-boot.run.profiles=prod
+    ```
+
+    - O **DataLoader** criará automaticamente:
+      - as roles (`ROLE_USER`, `ROLE_PROFESSOR`, `ROLE_ADMIN`)
+      - um usuário `admin@ucsas.com` / `admin123` com `ROLE_ADMIN` e `ROLE_PROFESSOR`.
+
+4. Verifique no console:
+
+    ```
+    DataLoader: roles created and admin@ucsas.com seeded
+    ```
+
+---
+
+## Segurança & JWT
+
+- **Algoritmo**: HS512  
+- **Claim** `"roles"`: lista de perfis (`["ROLE_ADMIN","ROLE_PROFESSOR"]`, etc.)  
+- **Filtro**: `JwtAuthenticationFilter` extrai o claim e popula o `SecurityContext`.  
+- **Métodos** protegidos via `@EnableMethodSecurity` + `@PreAuthorize`.
+
+---
+
+## Endpoints & Permissões
+
+### 1. Autenticação
+
+| Método | Rota           | Acesso   | Descrição                           |
+| ------ | -------------- | -------- | ----------------------------------- |
+| POST   | `/auth/login`  | Public   | Autentica e retorna JWT             |
+
+**Body exemplo**:
+```json
+{ "username":"admin@ucsas.com", "password":"admin123" }
+```
+
+
+
+
+
+
+### 2. Usuários (`/user`)
+
+
+| Método | Rota         | Permissão  | Descrição               |
+| ------ | ------------ | ---------- | ----------------------- |
+| POST   | `/user/new`  | ROLE_ADMIN | Cadastra novo usuário   |
+| GET    | `/user`      | ROLE_ADMIN | Lista todos usuários    |
+| GET    | `/user/{id}` | ROLE_ADMIN | Busca usuário por ID    |
+| PUT    | `/user/{id}` | ROLE_ADMIN | Atualiza usuário        |
+| DELETE | `/user/{id}` | ROLE_ADMIN | Deleta usuário          |
+
+**Body exemplo**:
+
+`{  "fullname":"Maria Silva",  "email":"maria@example.com",  "password":"SenhaForte!234",  "enterprise":"UCSal",  "roles":["ROLE_USER"]  // opcional; padrão ROLE_USER  }` 
 
 ----------
 
-  
 
-  
+### 3. Software (`/software`)
 
-  
+| Método | Rota                      | Permissão                 | Descrição               |
+| ------ | ------------------------- | ------------------------- | ----------------------- |
+| POST   | `/software/new`           | ROLE_ADMIN                | Cadastrar software      |
+| GET    | `/software`               | ROLE_ADMIN,ROLE_PROFESSOR | Listar todos softwares  |
+| GET    | `/software/{softwareId}`  | ROLE_ADMIN                | Buscar software por ID  |
+| PUT    | `/software/{softwareId}`  | ROLE_ADMIN                | Atualizar software      |
 
-# Desenvolvimento Back End
-
-  
-
-  
-
-  
-
-## Turma 01 - Noturno - Análise e Desenvolvimento de Sistemas
-
-  
-
-  
-
-  
-
-Deve ser utilizado obrigatoriamente a linguagem JAVA com Spring.
-
-  
-
-  
-
-Necessário a identificação da tecnologia utilizada na entrega do formulário com o link desse projeto
-
-  
-
-  
-
-  
-
+**Body exemplo (POST & PUT)**  
+```json
+{
+  "name": "Visual Studio",
+  "version": "1.0.0",
+  "laboratoryId": 1
+}
+```
 ----------
 
-  
-  
+### 4. Laboratório (`/laboratory`)
 
-
-
-
-
-
-## 🛠️ Pré-requisitos
-
-- **Java 17**
-- **Maven** (ou use o wrapper `./mvnw` incluído)
-- (Opcional) [Postman](https://www.postman.com/) ou `curl` para testes
-
----
-
-##  Configuração Local
-
-1. **Clone** o repositório e acesse a pasta:
-   ```bash
-   git clone <repo-url>
-   cd des-back-end-imula_back
-   ```
-
-2. Crie um arquivo `.env` na raiz com estas variáveis (adapte `JWT_EXPIRATION` se quiser outro prazo):
-   ```ini
-   JWT_SECRET=<sua_chave_base64_com_~512_bits>
-   JWT_EXPIRATION=3600000   # em milissegundos (1h)
-   ```
-   > Gere uma chave com:
-> ```bash
-> openssl rand -base64 64
-> ```
-
-3. No `src/main/resources/application-dev.properties`, verifique:
-   ```properties
-   token.jwt.secret=${JWT_SECRET}
-   token.jwt.expiration=${JWT_EXPIRATION:3600000}
-   spring.profiles.active=dev
-   ```
-
----
-
-##  Build e Execução
-
-Use o wrapper:
-```bash
-chmod +x mvnw       # se necessário
-./mvnw clean spring-boot:run
-```
-Ou, com Maven instalado:
-```bash
-mvn clean spring-boot:run
-```
-A aplicação estará em `http://localhost:8080/`.
-
-Para acessar o console H2 (banco em memória):
-```
-http://localhost:8080/h2-console
-JDBC URL: jdbc:h2:mem:instalab
-``` 
-
----
-
-## Fluxo de Autenticação (JWT)
-
-1. **Registro**: `POST /user/new` (sem autenticação)  
-2. **Login**:    `POST /auth/login` (sem autenticação) → retorna `{ "token": "<JWT>" }`  
-3. **Requisições Protegidas**: incluir header `Authorization: Bearer <JWT>`
-
----
-
-## Endpoints
-
-### 1. Cadastro de Usuário (público)
-```
-POST /user/new
-```  
-**Headers:** `Content-Type: application/json`  
-**Body:**
+| Método | Rota                   | Permissão   | Descrição                       |
+| ------ | ---------------------- | ----------- | ------------------------------- |
+| GET    | `/laboratory`          | ROLE_ADMIN  | Listar todos laboratórios       |
+| GET    | `/laboratory/{id}`     | ROLE_ADMIN  | Buscar laboratório por ID       |
+| POST   | `/laboratory/new`      | ROLE_ADMIN  | Cadastrar novo laboratório      |
+| PUT    | `/laboratory/{id}`     | ROLE_ADMIN  | Atualizar laboratório           |
+| DELETE | `/laboratory/{id}`     | ROLE_ADMIN  | Remover software de laboratório |
+**Body (POST & PUT)**  
 ```json
 {
-  "fullname": "Nome Completo",
-  "email": "usuario@exemplo.com",
-  "password": "suaSenha",
-  "enterprise": "EmpresaX"
+  "name": "Lab de Química",
+  "location": "Bloco A"
 }
 ```
-**Resposta:** `201 Created` com JSON do usuário.
-
-### 2. Login (público)
-```
-POST /auth/login
-```  
-**Headers:** `Content-Type: application/json`  
-**Body:**
-```json
-{
-  "username": "usuario@exemplo.com",
-  "password": "suaSenha"
-}
-```
-**Resposta:** `200 OK`
-```json
-{ "token": "<JWT_TOKEN>" }
-```
-
-### 3. Listar Usuários (protegido)
-```
-GET /user
-```  
-**Headers:**
-```
-Authorization: Bearer <JWT_TOKEN>
-```
-**Resposta:** `200 OK`  
-```json
-[
-  { "userId": "...", "fullname": "...", "enterprise": "..." },
-  …
-]
-```
-
-### 4. Notificações
-
-#### a) Enviar notificação (protegido)
-```
-POST /notifications/{professorId}?message=<texto>
-```  
-**Headers:** `Authorization: Bearer <JWT_TOKEN>`  
-**Exemplo URL:**
-```
-http://localhost:8080/notifications/c0297b74-5dfd-46be-ade2-471ff1247b7d?message=Solicita%C3%A7%C3%A3o%20conclu%C3%ADda
-```
-**Resposta:** `200 OK` com JSON:
-```json
-{
-  "id":"<notifUUID>",
-  "message":"Solicitação concluída",
-  "sentAt":"2025-04-22T...",
-  "read":false
-}
-```
-
-#### b) Listar notificações (protegido)
-```
-GET /notifications?professorId={professorId}
-```  
-**Headers:** `Authorization: Bearer <JWT_TOKEN>`  
-**Resposta:** `200 OK`
-```json
-[
-  { "id":"...", "message":"...","sentAt":"...","read":false },
-  …
-]
-```
-
-#### c) Marcar notificação como lida (protegido)
-```
-PATCH /notifications/{notificationId}/read
-```  
-**Headers:** `Authorization: Bearer <JWT_TOKEN>`  
-**Resposta:** `204 No Content`
-
 ---
 
-## Tratamento Global de Erros
+### 5. Solicitações (`/solicitation`)
 
-Respostas padronizadas via `GlobalExceptionHandler`:
+| Método | Rota                          | Permissão     | Descrição                    |
+| ------ | ----------------------------- | ------------- | ---------------------------- |
+| GET    | `/solicitation`               | AUTHENTICATED | Listar todas solicitações    |
+| POST   | `/solicitation/new`           | AUTHENTICATED | Criar nova solicitação       |
+| PUT    | `/solicitation/execute/{id}`  | AUTHENTICATED | Executar solicitação         |
+| PUT    | `/solicitation/edit/{id}`     | AUTHENTICATED | Editar laboratório da solicitação |
 
-| Status | Causa                                | Exemplo de resposta                                               |
-|:------:|:-------------------------------------|:------------------------------------------------------------------|
-| 400    | Validação de DTO ou parâmetros errados | `{status:400, errors:[{field,..}], timestamp:...}`              |
-| 401    | Credenciais inválidas                | `{status:401, error:"Usuário ou senha inválidos", timestamp:...}`|
-| 404    | Recurso não encontrado               | `{status:404, error:"... not found", timestamp:...}`            |
-| 500    | Falha interna                        | `{status:500, error:"Erro interno: ...", timestamp:...}`        |
+**Body (POST `/solicitation/new`)**
 
+```json
+`{  "userId":  "uuid-do-usuario",  "softwareId":  "uuid-do-software",  "laboratoryId":  1  }`
+```
+**Body (PUT `/solicitation/edit/{id}`)**
+
+```json
+`1  // novo laboratoryId`
+```
 ---
 
-## Testes com curl
+### 6. Notificações (`/notifications`)
 
-```bash
-# 1) Criar usuário
-curl -i -X POST http://localhost:8080/user/new \
-  -H "Content-Type: application/json" \
-  -d '{"fullname":"Teste","email":"teste@ex.com","password":"123","enterprise":"Lab"}'
+| Método | Rota                                      | Permissão     | Descrição                       |
+| ------ | ----------------------------------------- | ------------- | ------------------------------- |
+| POST   | `/notifications/{professorId}`            | AUTHENTICATED | Enviar notificação a professor  |
+| GET    | `/notifications?professorId={profId}`     | AUTHENTICATED | Listar notificações de professor|
+| PATCH  | `/notifications/{notificationId}/read`    | AUTHENTICATED | Marcar notificação como lida    |
+**Body (POST `/notifications/{professorId}`)**
 
-# 2) Login
-curl -i -X POST http://localhost:8080/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"teste@ex.com","password":"123"}'
-
-# 3) Chamada protegida
-curl -i http://localhost:8080/user \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-
-# 4) Enviar notificação
-curl -i -X POST "http://localhost:8080/notifications/{professorId}?message=Ok" \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-
-# 5) Listar notificações
-curl -i http://localhost:8080/notifications?professorId={professorId} \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-
-# 6) Marcar como lida
-curl -i -X PATCH http://localhost:8080/notifications/{notificationId}/read \
-  -H "Authorization: Bearer <JWT_TOKEN>"
 ```
+`?message=Seu software foi aprovado`
+```
+----------
 
+## Docker Compose
+
+```version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:` 
+```
+----------
