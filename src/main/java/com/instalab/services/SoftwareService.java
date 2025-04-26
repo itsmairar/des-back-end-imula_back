@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ public class SoftwareService {
         softwareRegistred.setSoftwareAuthor(softwareRegistred.getSoftwareAuthor());
         softwareRegistred.setSoftwareLink(softwareRequest.softwareLink());
         softwareRegistred.setLicenseModel(license);
-        softwareRegistred.setRequestDate(softwareRequest.requestDate());
+        softwareRegistred.setRegistrationDate(LocalDate.now());
         softwareRegistred.setSoftwareAvailability(softwareRequest.availability());
         return softwareRegistred;
     }

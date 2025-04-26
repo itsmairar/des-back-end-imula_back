@@ -35,10 +35,10 @@ public class DataLoader implements CommandLineRunner {
             }
         }
 
-        if (userRepo.findByEmail("admin@ucsas.com").isEmpty()) {
+        if (userRepo.findByEmail("admin@ucsal.com").isEmpty()) {
             UserModel admin = new UserModel(
                 "Administrador",
-                "admin@ucsas.com",
+                "admin@ucsal.com",
                 encoder.encode("admin123"),
                 "UCSal"
             );

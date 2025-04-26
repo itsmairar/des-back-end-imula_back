@@ -15,7 +15,6 @@ public record SoftwareRequest(
                              String softwareAuthor,
                              String softwareLink,
                              Integer licenseCode,
-                             LocalDate requestDate,
                              Boolean availability
 ) {
 
@@ -27,7 +26,6 @@ public record SoftwareRequest(
                 softwareRequest.softwareAuthor(),
                 softwareRequest.softwareLink(),
                 license,
-                softwareRequest.requestDate(),
                 softwareRequest.availability()
         );
     }

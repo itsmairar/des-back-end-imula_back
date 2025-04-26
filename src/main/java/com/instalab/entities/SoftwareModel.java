@@ -22,7 +22,7 @@ public class SoftwareModel {
     @ManyToOne
     @JoinColumn(name = "license_id")
     private LicenseModel licenseModel; //licensa (gratuito - FREE / pago - PAID)
-    private LocalDate requestDate; //data da requisicao
+    private LocalDate registrationDate; //data da requisicao
     private Boolean softwareAvailability = true; //disponibilidade de instalacao
     private Boolean softwareInstalled;
 
@@ -45,8 +45,7 @@ public class SoftwareModel {
                          String softwareVersion,
                          String softwareAuthor,
                          String softwareLink,
-                         LicenseModel licenseModel,
-                         LocalDate requestDate) {
+                         LicenseModel licenseModel) {
         this.softwareId = softwareId;
         this.softwareName = softwareName;
         this.softwareDescription = softwareDescription;
@@ -54,7 +53,7 @@ public class SoftwareModel {
         this.softwareAuthor = softwareAuthor;
         this.softwareLink = softwareLink;
         this.licenseModel = licenseModel;
-        this.requestDate = requestDate;
+        this.registrationDate = LocalDate.now();
     }
 
     public SoftwareModel(
@@ -64,7 +63,6 @@ public class SoftwareModel {
             String softwareAuthor,
             String softwareLink,
             LicenseModel licenseModel,
-            LocalDate requestDate,
             Boolean softwareAvailability
     ) {
         this.softwareName = softwareName;
@@ -73,7 +71,7 @@ public class SoftwareModel {
         this.softwareAuthor = softwareAuthor;
         this.softwareLink = softwareLink;
         this.licenseModel = licenseModel;
-        this.requestDate = requestDate;
+        this.registrationDate = LocalDate.now();
         this.softwareAvailability = softwareAvailability;
         laboratoriesList = new LinkedHashSet<>();
 
@@ -131,12 +129,12 @@ public class SoftwareModel {
         this.licenseModel = licenseModel;
     }
 
-    public LocalDate getRequestDate() {
-        return requestDate;
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
     }
 
-    public void setRequestDate(LocalDate requestDate) {
-        this.requestDate = requestDate;
+    public void setRegistrationDate(LocalDate requestDate) {
+        this.registrationDate = requestDate;
     }
 
     public Boolean isAvailable() {

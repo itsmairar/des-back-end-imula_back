@@ -27,7 +27,7 @@ public record LaboratoryResponse(
                                 software.getSoftwareAuthor(),
                                 software.getSoftwareLink(),
                                 software.getLicenseModel(),
-                                software.getRequestDate(),
+                                software.getRegistrationDate(),
                                 software.isAvailable()))
                         .collect(Collectors.toSet())
         );
@@ -48,7 +48,7 @@ public record LaboratoryResponse(
                                 software.getSoftwareAuthor(),
                                 software.getSoftwareLink(),
                                 software.getLicenseModel(),
-                                software.getRequestDate(),
+                                software.getRegistrationDate(),
                                 software.isAvailable()))
                         .collect(Collectors.toSet())
         );

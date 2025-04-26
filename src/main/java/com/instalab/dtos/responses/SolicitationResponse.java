@@ -33,7 +33,7 @@ public record SolicitationResponse (
                                 software.getSoftwareAuthor(),
                                 software.getSoftwareLink(),
                                 software.getLicenseModel(),
-                                software.getRequestDate(),
+                                software.getRegistrationDate(),
                                 software.isAvailable()
                         ))
                         .collect(Collectors.toSet()),
@@ -46,7 +46,7 @@ public record SolicitationResponse (
                         software.getSoftwareAuthor(),
                         software.getSoftwareLink(),
                         software.getLicenseModel(),
-                        software.getRequestDate(),
+                        software.getRegistrationDate(),
                         software.isAvailable()
                 ))
                 .collect(Collectors.toSet()),
@@ -69,7 +69,7 @@ public record SolicitationResponse (
                                 software.getSoftwareAuthor(),
                                 software.getSoftwareLink(),
                                 software.getLicenseModel(),
-                                software.getRequestDate(),
+                                software.getRegistrationDate(),
                                 software.isAvailable()
                         ))
                         .collect(Collectors.toSet()),
@@ -82,7 +82,7 @@ public record SolicitationResponse (
                                 software.getSoftwareAuthor(),
                                 software.getSoftwareLink(),
                                 software.getLicenseModel(),
-                                software.getRequestDate(),
+                                software.getRegistrationDate(),
                                 software.isAvailable()
                         ))
                         .collect(Collectors.toSet()),

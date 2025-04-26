@@ -66,7 +66,6 @@ public class Dev {
                     "OpenAI",
                     "https://openai.com/chatgpt",
                     l1,
-                    LocalDate.now(),
                     true);
             soft1.getLaboratoriesList().add(lab1);
             softwareRepository.save(soft1);
