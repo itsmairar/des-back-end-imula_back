@@ -1,6 +1,5 @@
 package com.instalab.dtos.responses;
 
-
 import com.instalab.dtos.responses.util.SoftwareSimpleResponse;
 import com.instalab.entities.LaboratoryModel;
 import com.instalab.entities.SoftwareModel;
@@ -18,10 +17,12 @@ public record SolicitationResponse (
         Long laboratory,
         LocalDate utilizationDate,
         Boolean verified,
-        Boolean completed
-){
+        Boolean completed,
+        String professorName
+) {
     public static SolicitationResponse parseToSolicitationResponse(SolicitationModel solicitationModel,
-                                                                   LaboratoryModel laboratory, List<SoftwareModel> needInstalation) {
+                                                                    LaboratoryModel laboratory,
+                                                                    List<SoftwareModel> needInstalation) {
         return new SolicitationResponse(
                 solicitationModel.getSolicitationId(),
                 solicitationModel.getSoftwaresSolicitedByUUID().stream()
@@ -38,22 +39,23 @@ public record SolicitationResponse (
                         ))
                         .collect(Collectors.toSet()),
                 needInstalation.stream()
-                .map(software -> new SoftwareSimpleResponse(
-                        software.getSoftwareId(),
-                        software.getSoftwareName(),
-                        software.getSoftwareDescription(),
-                        software.getSoftwareVersion(),
-                        software.getSoftwareAuthor(),
-                        software.getSoftwareLink(),
-                        software.getLicenseModel(),
-                        software.getRegistrationDate(),
-                        software.isAvailable()
-                ))
-                .collect(Collectors.toSet()),
+                        .map(software -> new SoftwareSimpleResponse(
+                                software.getSoftwareId(),
+                                software.getSoftwareName(),
+                                software.getSoftwareDescription(),
+                                software.getSoftwareVersion(),
+                                software.getSoftwareAuthor(),
+                                software.getSoftwareLink(),
+                                software.getLicenseModel(),
+                                software.getRegistrationDate(),
+                                software.isAvailable()
+                        ))
+                        .collect(Collectors.toSet()),
                 laboratory.getLaboratoryId(),
                 solicitationModel.getUtilizationDate(),
                 solicitationModel.isValidated(),
-                solicitationModel.isExecuted()
+                solicitationModel.isExecuted(),
+                solicitationModel.getProfessor().getFullname()
         );
     }
 
@@ -89,7 +91,8 @@ public record SolicitationResponse (
                 solicitationModel.getLaboratoryId(),
                 solicitationModel.getUtilizationDate(),
                 solicitationModel.isValidated(),
-                solicitationModel.isExecuted()
+                solicitationModel.isExecuted(),
+                solicitationModel.getProfessor().getFullname()
         );
     }
 }

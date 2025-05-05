@@ -5,6 +5,7 @@ import com.instalab.dtos.responses.SolicitationResponse;
 import com.instalab.entities.LaboratoryModel;
 import com.instalab.entities.SoftwareModel;
 import com.instalab.entities.SolicitationModel;
+import com.instalab.entities.UserModel;
 import com.instalab.repositories.SolicitationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,15 +26,15 @@ public class SolicitationService {
     @Autowired
     private SoftwareService softwareService;
 
+    @Autowired
+    private AuthenticatedUserService authenticatedUserService;
+
     @Transactional
     public SolicitationResponse createSolicitation(SolicitationRequest solicitationRequest) {
-
-        //Precisa adicionar a logica de envio da notificacao para o professor informando sobre a validação de sua solicitacao
 
         LaboratoryModel laboratory = laboratoryService.findLaboratoryById(solicitationRequest.laboratoryId());
         Set<UUID> installedSoftwareIds = getSoftwaresUUIDsInstalled(laboratory);
 
-        //Lista de softwares solicitados que ainda nao foram instalados no laboratorio
         Set<UUID> notInstalled = validateSoftwares(installedSoftwareIds, solicitationRequest);
 
         if (notInstalled.isEmpty()) {
@@ -44,7 +45,9 @@ public class SolicitationService {
 
         laboratory.setLaboratoryAvailability(Boolean.FALSE);
 
-        SolicitationModel newSolicitation = solicitationRequest.toSolicitationModel(solicitationRequest, laboratory);
+        UserModel professor = authenticatedUserService.getAuthenticatedUser();
+
+        SolicitationModel newSolicitation = solicitationRequest.toSolicitationModel(solicitationRequest, laboratory, professor);
         newSolicitation.setValidated(Boolean.TRUE);
         newSolicitation.setExecuted(Boolean.FALSE);
 
@@ -69,7 +72,6 @@ public class SolicitationService {
             Set<UUID> installedSoftwareIds,
             SolicitationRequest softwaresRequested
     ) {
-
         return softwaresRequested.softwaresSolicited()
                 .stream()
                 .filter(softwareId -> !installedSoftwareIds.contains(softwareId))
@@ -78,13 +80,20 @@ public class SolicitationService {
 
     public List<SolicitationResponse> getAllSolicitations() {
         List<SolicitationModel> solicitations = solicitationRepository.findAll();
-        return solicitations.stream()
-                .map(SolicitationResponse::parseToSolicitationResponse)
-                .collect(Collectors.toList());
+
+        return solicitations.stream().map(solicitation -> {
+            LaboratoryModel lab = laboratoryService.findLaboratoryById(solicitation.getLaboratoryId());
+            List<SoftwareModel> softwaresNeedInstallation = new ArrayList<>(solicitation.getNeedInstalation());
+
+            return SolicitationResponse.parseToSolicitationResponse(
+                    solicitation,
+                    lab,
+                    softwaresNeedInstallation
+            );
+        }).collect(Collectors.toList());
     }
 
     public void executeSolicitation(Long SolicitationId) {
-        //Precisa adicionar a logica de envio da notificacao para o professor informando sobre a conclusao de sua solicitacao
         SolicitationModel solicitation = solicitationRepository.findById(SolicitationId).get();
 
         LaboratoryModel laboratory = laboratoryService.findLaboratoryById(solicitation.getLaboratoryId());
@@ -99,16 +108,13 @@ public class SolicitationService {
         solicitation.setLaboratoryId(laboratoryId);
 
         LaboratoryModel laboratory = laboratoryService.findLaboratoryById(solicitation.getLaboratoryId());
-        //Softwares instalados no novo laboratorio selecionado
         Set<UUID> installedSoftwareIds = getSoftwaresUUIDsInstalled(laboratory);
 
-        //Softwares que foram solicitados na criação da solicitação
         Set<UUID> solicitedSoftwareIds = solicitation.getSoftwaresSolicitedByUUID()
                 .stream()
                 .map(SoftwareModel::getSoftwareId)
                 .collect(Collectors.toSet());
 
-        //Filtro dos softwares solicitados que ainda não estão instalados no novo laboratorio selecionado
         Set<UUID> notInstalled = solicitedSoftwareIds
                 .stream()
                 .filter(softwareId -> !installedSoftwareIds.contains(softwareId))
@@ -126,8 +132,5 @@ public class SolicitationService {
         solicitation.setExecuted(Boolean.FALSE);
 
         solicitationRepository.save(solicitation);
-
     }
-
-
 }

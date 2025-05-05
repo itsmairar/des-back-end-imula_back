@@ -21,7 +21,7 @@ public class SolicitationController {
     private SolicitationService solicitationService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'PROFESSOR')")
     public ResponseEntity<List<SolicitationResponse>> getAllSolicitations() {
         List<SolicitationResponse> solicitations = solicitationService.getAllSolicitations();
         return ResponseEntity.status(HttpStatus.OK).body(solicitations);

@@ -3,6 +3,7 @@ package com.instalab.dtos.requests;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.instalab.entities.LaboratoryModel;
 import com.instalab.entities.SolicitationModel;
+import com.instalab.entities.UserModel;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -15,11 +16,12 @@ public record SolicitationRequest(
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate utilizationDate
 ) {
-    public SolicitationModel toSolicitationModel(SolicitationRequest solicitationRequest, LaboratoryModel laboratory) {
+    public SolicitationModel toSolicitationModel(SolicitationRequest solicitationRequest, LaboratoryModel laboratory, UserModel professor) {
         return new SolicitationModel(
                 new LinkedHashSet<>(),
                 laboratory.getLaboratoryId(),
-                solicitationRequest.utilizationDate()
+                solicitationRequest.utilizationDate(),
+                professor
         );
-    }
+    }    
 }

@@ -18,24 +18,26 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/laboratory")
 //PERFIL: ADMIN
-@PreAuthorize("hasRole('ADMIN')")
 public class LaboratoryController {
 
     @Autowired
     private LaboratoryService laboratoryService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'USER')")
     @GetMapping()
     public ResponseEntity<List<LaboratoryResponse>> getAllLaboratory() {
         List<LaboratoryResponse> laboratoriesListResponse = laboratoryService.getAllLaboratories();
         return ResponseEntity.status(HttpStatus.OK).body(laboratoriesListResponse);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{laboratoryId}")
     public ResponseEntity<LaboratoryResponse> softwaresAssociatesByLaboratory(@PathVariable Long laboratoryId) {
         LaboratoryResponse laboratoryResponse = laboratoryService.getLaboratoryById(laboratoryId);
         return ResponseEntity.status(HttpStatus.OK).body(laboratoryResponse);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/new")
     public ResponseEntity<Void> registerLaboratory(@RequestBody LaboratoryRequest laboratoryRequest) {
         LaboratoryResponse responseNewSoftware = laboratoryService.createLaboratory(laboratoryRequest);
@@ -43,6 +45,7 @@ public class LaboratoryController {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{laboratoryId}")
     public ResponseEntity<Void> updateLaboratory(
             @PathVariable Long laboratoryId,
@@ -52,6 +55,7 @@ public class LaboratoryController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{laboratoryId}")
     public ResponseEntity<Void> deleteLaboratory(@PathVariable Long laboratoryId, @RequestBody UUID softwareId) {
         laboratoryService.removeSoftware(laboratoryId, softwareId);

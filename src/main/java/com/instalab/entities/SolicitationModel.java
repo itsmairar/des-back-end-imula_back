@@ -29,6 +29,11 @@ public class SolicitationModel {
             inverseJoinColumns = @JoinColumn(name = "softwareNeedInstalation_id")
     )
     private Set<SoftwareModel> needInstalation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserModel professor;
+
     private Long laboratoryId;
     private LocalDate utilizationDate;
     private Boolean validated;
@@ -39,12 +44,14 @@ public class SolicitationModel {
     public SolicitationModel(
             Set<SoftwareModel> softwaresSolicitedByUUID,
             Long laboratoryId,
-            LocalDate utilizationDate
+            LocalDate utilizationDate,
+            UserModel professor
     ) {
         this.softwaresSolicitedByUUID = softwaresSolicitedByUUID;
         this.laboratoryId = laboratoryId;
         this.utilizationDate = utilizationDate;
         this.needInstalation = new HashSet<>();
+        this.professor = professor;
     }
 
     public Long getSolicitationId() {
@@ -97,5 +104,13 @@ public class SolicitationModel {
 
     public void setNeedInstalation(Set<SoftwareModel> needInstalation) {
         this.needInstalation = needInstalation;
+    }
+
+    public UserModel getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(UserModel professor) {
+        this.professor = professor;
     }
 }

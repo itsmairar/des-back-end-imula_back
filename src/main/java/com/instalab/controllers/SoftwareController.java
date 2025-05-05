@@ -33,7 +33,7 @@ public class SoftwareController {
     }
 
     //Endpoint para listar todos os softwares cadastrados
-    @PreAuthorize("hasAnyRole('ADMIN','PROFESSOR')")
+    @PreAuthorize("hasAnyRole('ADMIN','PROFESSOR', 'USER')")
     @GetMapping()
     public ResponseEntity<List<SoftwareResponse>> allSoftwares(){
         List<SoftwareResponse> softwareResponseList = softwareService.getAllSoftware();
