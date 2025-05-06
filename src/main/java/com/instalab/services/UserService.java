@@ -74,7 +74,10 @@ public class UserService {
 
         user.setFullname(userRequest.fullname());
         user.setEmail(userRequest.email());
-        user.setPassword(passwordEncoder.encode(userRequest.password()));
+
+        if(userRequest.password() != ""){
+            user.setPassword(passwordEncoder.encode(userRequest.password()));
+        }
         user.setEnterprise(userRequest.enterprise());
 
         // atualiza roles também

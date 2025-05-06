@@ -1,19 +1,25 @@
 package com.instalab.dtos.responses;
 
+import com.instalab.entities.Role;
 import com.instalab.entities.UserModel;
 
+import java.util.Set;
 import java.util.UUID;
 
 public record UserResponse(
         UUID userId,
         String fullname,
-        String enterprise) {
+        String email,
+        String enterprise,
+        Set<Role> roles) {
 
     public static UserResponse parseToUserResponse(UserModel userModel){
         return new UserResponse(
                 userModel.getUserId(),
                 userModel.getFullname(),
-                userModel.getEnterprise()
+                userModel.getEmail(),
+                userModel.getEnterprise(),
+                userModel.getRoles()
         );
     }
 }
