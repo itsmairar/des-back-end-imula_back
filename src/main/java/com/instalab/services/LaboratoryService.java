@@ -1,19 +1,21 @@
 package com.instalab.services;
 
-import com.instalab.dtos.requests.LaboratoryRequest;
-import com.instalab.dtos.responses.LaboratoryResponse;
-import com.instalab.entities.LaboratoryModel;
-import com.instalab.entities.SoftwareModel;
-import com.instalab.repositories.LaboratoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.instalab.dtos.requests.LaboratoryRequest;
+import com.instalab.dtos.responses.LaboratoryResponse;
+import com.instalab.entities.LaboratoryModel;
+import com.instalab.entities.SoftwareModel;
+import com.instalab.repositories.LaboratoryRepository;
 
 @Service
 public class LaboratoryService {
@@ -59,6 +61,12 @@ public class LaboratoryService {
         LaboratoryModel laboratoryRegistred = laboratoryRepository.findById(laboratoryId).get();
         processUpdate(laboratoryRequest, laboratoryRegistred);
 
+         for (SoftwareModel software : new HashSet<>(laboratoryRegistred.getSoftwaresInstalled())) {
+        software.getLaboratoriesList().remove(laboratoryRegistred);
+    }
+
+        laboratoryRegistred.getSoftwaresInstalled().clear();
+
         Set<SoftwareModel> softwares = laboratoryRequest.softwaresInstalled()
                 .stream()
                 .map(softwareId -> {
@@ -68,6 +76,7 @@ public class LaboratoryService {
                     return software;
                 })
                 .collect(Collectors.toSet());
+        
         laboratoryRegistred.getSoftwaresInstalled().addAll(softwares);
         laboratoryRepository.save(laboratoryRegistred);
     }

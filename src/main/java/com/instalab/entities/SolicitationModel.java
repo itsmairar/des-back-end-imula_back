@@ -1,10 +1,19 @@
 package com.instalab.entities;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name="solicitation_tb")
@@ -36,6 +45,7 @@ public class SolicitationModel {
 
     private Long laboratoryId;
     private LocalDate utilizationDate;
+    private LocalDate solicitationDate;
     private Boolean validated;
     private Boolean executed;
 
@@ -50,6 +60,7 @@ public class SolicitationModel {
         this.softwaresSolicitedByUUID = softwaresSolicitedByUUID;
         this.laboratoryId = laboratoryId;
         this.utilizationDate = utilizationDate;
+        this.solicitationDate = LocalDate.now();
         this.needInstalation = new HashSet<>();
         this.professor = professor;
     }
@@ -113,4 +124,14 @@ public class SolicitationModel {
     public void setProfessor(UserModel professor) {
         this.professor = professor;
     }
+
+    public LocalDate getSolicitationDate() {
+        return solicitationDate;
+    }
+
+    public void setSolicitationDate(LocalDate solicitationDate) {
+        this.solicitationDate = solicitationDate;
+    }
+
+    
 }

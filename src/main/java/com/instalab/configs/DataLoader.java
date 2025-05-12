@@ -58,7 +58,7 @@ public class DataLoader implements CommandLineRunner {
             SolicitationModel s1 = new SolicitationModel(
             new HashSet<SoftwareModel>(),
             1L,
-            LocalDate.now(),
+            LocalDate.now().plusWeeks(3),
             admin
             );
             s1.setExecuted(false);
